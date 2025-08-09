@@ -1,103 +1,96 @@
-import Image from "next/image";
+"use client";
+import React, { useMemo, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, TrendingUp, TrendingDown, Globe, Phone, BarChart3, Search, Facebook, Settings, RefreshCw, CheckCircle2 } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as ReTooltip, AreaChart, Area, Legend } from "recharts";
 
-export default function Home() {
+const mockRankSeries = [
+  { date: "2025-07-01", avgPos: 14.2, top3: 6, top10: 18 },
+  { date: "2025-07-08", avgPos: 12.4, top3: 8, top10: 22 },
+  { date: "2025-07-15", avgPos: 10.1, top3: 11, top10: 27 },
+  { date: "2025-07-22", avgPos: 9.4, top3: 13, top10: 31 },
+  { date: "2025-07-29", avgPos: 8.9, top3: 14, top10: 34 },
+  { date: "2025-08-05", avgPos: 8.1, top3: 16, top10: 36 },
+];
+
+const mockChannelSeries = [
+  { date: "Jul", organic: 2112, direct: 987, paid: 320, referral: 188 },
+  { date: "Aug", organic: 2541, direct: 1101, paid: 405, referral: 205 },
+  { date: "Sep", organic: 2732, direct: 1288, paid: 450, referral: 250 },
+  { date: "Oct", organic: 2910, direct: 1352, paid: 510, referral: 262 },
+  { date: "Nov", organic: 3055, direct: 1394, paid: 560, referral: 290 },
+  { date: "Dec", organic: 3221, direct: 1502, paid: 600, referral: 318 },
+];
+
+const mockIntegrations = [
+  { key: "gsc", name: "Google Search Console", icon: Globe, status: "connected" },
+  { key: "ga4", name: "Google Analytics 4", icon: BarChart3, status: "connected" },
+  { key: "gbp", name: "Google Business Profile", icon: Search, status: "connected" },
+  { key: "fb", name: "Facebook Page Insights", icon: Facebook, status: "connected" },
+  { key: "callrail", name: "CallRail", icon: Phone, status: "connected" },
+  { key: "psi", name: "PageSpeed Insights", icon: RefreshCw, status: "ready" },
+  { key: "lighthouse", name: "Lighthouse", icon: Settings, status: "ready" },
+];
+
+export default function Page() {
+  const [loading, setLoading] = useState(false);
+  const [domain, setDomain] = useState("meyerchiropracticsouthlake.com");
+
+  const positionTrend = useMemo(() => {
+    const first = mockRankSeries[0]?.avgPos ?? 0;
+    const last = mockRankSeries[mockRankSeries.length - 1]?.avgPos ?? 0;
+    const delta = (first - last).toFixed(1);
+    return { delta, up: Number(delta) > 0 };
+  }, []);
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <TooltipProvider>
+      <div className="min-h-screen w-full bg-gradient-to-b from-white to-slate-50 p-6 md:p-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Client SEO Dashboard</h1>
+              <p className="text-slate-600">Live performance, rankings, and calls — all in one view.</p>
+            </div>
+            <div className="flex w-full max-w-xl items-center gap-3">
+              <Input value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="Add or switch domain" />
+              <Button className="gap-2" onClick={() => setLoading(true)} disabled={loading}>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Refresh
+              </Button>
+            </div>
+          </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          <Separator className="my-6" />
+
+          {/* Integrations */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {mockIntegrations.map((intg) => (
+              <Card key={intg.key} className="shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">{intg.name}</CardTitle>
+                  <intg.icon className="h-4 w-4" />
+                </CardHeader>
+                <CardContent className="flex items-center justify-between">
+                  <Badge variant={intg.status === "connected" ? "default" : "secondary"} className="rounded-full">
+                    {intg.status}
+                  </Badge>
+                  {intg.status === "connected" ? (
+                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  ) : (
+                    <Button variant="outline" size="sm">Connect</Button>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    </TooltipProvider>
   );
 }
