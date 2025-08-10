@@ -11,7 +11,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-white flex items-center justify-center px-4">
       <div className="w-full max-w-sm rounded-2xl border shadow-sm bg-white p-6">
         <div className="mb-6 flex justify-center">
-          <Image src="/nickelseo-logo.png" alt="Nickel SEO" width={200} height={70} priority />
+          <Image src="/nickel-seo-logo.png" alt="Nickel SEO" width={200} height={70} priority />
         </div>
         <h1 className="text-xl font-semibold text-[#3B4247] text-center mb-2">
           Client Dashboard Login
