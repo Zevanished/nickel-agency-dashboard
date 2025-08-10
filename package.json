@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "migrate:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^6.13.0",
@@ -40,9 +42,4 @@
     "tw-animate-css": "^1.3.6",
     "typescript": "^5"
   }
-  
-}
-"scripts": {
-  "postinstall": "prisma generate",
-  "migrate:deploy": "prisma migrate deploy"
 }
