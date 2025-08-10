@@ -1,7 +1,4 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
-
+// src/components/DashboardUI.tsx
 "use client";
 import React, { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,8 +7,19 @@ import { Input } from "@/components/ui/input";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Globe, Phone, BarChart3, Search, Facebook, Settings, RefreshCw, CheckCircle2 } from "lucide-react";
+import {
+  Loader2,
+  Globe,
+  Phone,
+  BarChart3,
+  Search,
+  Facebook,
+  Settings,
+  RefreshCw,
+  CheckCircle2,
+} from "lucide-react";
 
+// Mock data (fine to keep for now)
 const mockRankSeries = [
   { date: "2025-07-01", avgPos: 14.2, top3: 6, top10: 18 },
   { date: "2025-07-08", avgPos: 12.4, top3: 8, top10: 22 },
@@ -31,18 +39,7 @@ const mockIntegrations = [
   { key: "lighthouse", name: "Lighthouse", icon: Settings, status: "ready" },
 ];
 
-// Protect the dashboard
-export default async function Page() {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    redirect("/login");
-  }
-
-  return <DashboardUI />;
-}
-
-// Moved UI into its own function so it works with the async check above
-function DashboardUI() {
+export default function DashboardUI() {
   const [loading, setLoading] = useState(false);
   const [domain, setDomain] = useState("meyerchiropracticsouthlake.com");
 
@@ -57,13 +54,18 @@ function DashboardUI() {
     <TooltipProvider>
       <div className="min-h-screen w-full bg-gradient-to-b from-white to-slate-50 p-6 md:p-10">
         <div className="mx-auto max-w-7xl">
+          {/* Top bar */}
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Client SEO Dashboard</h1>
               <p className="text-slate-600">Live performance, rankings, and calls — all in one view.</p>
             </div>
             <div className="flex w-full max-w-xl items-center gap-3">
-              <Input value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="Add or switch domain" />
+              <Input
+                value={domain}
+                onChange={(e) => setDomain(e.target.value)}
+                placeholder="Add or switch domain"
+              />
               <Button className="gap-2" onClick={() => setLoading(true)} disabled={loading}>
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Refresh
               </Button>
@@ -72,7 +74,7 @@ function DashboardUI() {
 
           <Separator className="my-6" />
 
-          {/* Integrations */}
+          {/* Integrations grid */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {mockIntegrations.map((intg) => (
               <Card key={intg.key} className="shadow-sm">
@@ -81,7 +83,10 @@ function DashboardUI() {
                   <intg.icon className="h-4 w-4" />
                 </CardHeader>
                 <CardContent className="flex items-center justify-between">
-                  <Badge variant={intg.status === "connected" ? "default" : "secondary"} className="rounded-full">
+                  <Badge
+                    variant={intg.status === "connected" ? "default" : "secondary"}
+                    className="rounded-full"
+                  >
                     {intg.status}
                   </Badge>
                   {intg.status === "connected" ? (
